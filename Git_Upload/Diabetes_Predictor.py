@@ -1,0 +1,90 @@
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn import svm
+from sklearn.metrics import accuracy_score
+from tkinter import *
+def func():
+ a = int(e1.get())
+ b = int(e2.get())
+ c = int(e3.get())
+ d = int(e4.get())
+ e = int(e5.get())
+ f = float(e6.get())
+ g = float(e7.get())
+ h = int(e8.get())
+ d_d = pd.read_csv('C:/Users/hp/Downloads/diabetes.csv')
+ x = d_d.drop(columns = 'Outcome',axis=1)
+ y = d_d['Outcome']
+ scaler = StandardScaler()
+ scaler.fit(x)
+ s_d = scaler.transform(x)
+ x = s_d
+ y = d_d['Outcome']
+ x_train,x_test,y_train,y_test = train_test_split(x,y, test_size = 0.2, stratify=y, 
+random_state=2)
+ classifier = svm.SVC(kernel='linear')
+ classifier.fit(x_train,y_train)
+ x_train_prediction = classifier.predict(x_train)
+ training_data_accuracy = accuracy_score(x_train_prediction,y_train)
+ 
+ x_test_prediction = classifier.predict(x_test)
+ testing_data_accuracy = accuracy_score(x_test_prediction,y_test)
+ lb2=Label(win,text="Accuracy score of the test data:",font=("Comic Sans MS",10))
+ lb2.grid(row=11,column=1)
+ lb3=Label(win,text=testing_data_accuracy,font=("Comic Sans MS",10))
+ lb3.grid(row=11,column=2)
+ 
+ input_data = (a,b,c,d,e,f,g,h)
+ 
+ input_data_as_numpy_array = np.asarray(input_data)
+ input_data_reshaped = input_data_as_numpy_array.reshape(1,-1)
+ std_data = scaler.transform(input_data_reshaped)
+ prediction = classifier.predict(std_data)
+ if prediction[0] == 0:
+    l9=Label(win,text="NOT DIABETIC",fg="green",font=("Comic Sans MS",15),width=20)
+    l9.grid(row=10,column=2)
+ else:
+    l9=Label(win,text="DIABETIC",fg="Red",font=("Comic Sans MS",15),width=20)
+    l9.grid(row=10,column=2)
+win=Tk()
+win.geometry('600x450')
+win.title("Diabetes Predictor")
+lb1=Label(win,text="Enter the following details:",font=("Comic Sans MS",15))
+lb1.grid(row=0,column=1)
+l1=Label(win,text="Pregnancies",font=("Comic Sans MS",10))
+l1.grid(row=1,column=1)
+e1=Entry(win)
+e1.grid(row=1,column=2)
+l2=Label(win,text="Glucose",font=("Comic Sans MS",10))
+l2.grid(row=2,column=1)
+e2=Entry(win)
+e2.grid(row=2,column=2)
+l3=Label(win,text="BloodPressure",font=("Comic Sans MS",10))
+l3.grid(row=3,column=1)
+e3=Entry(win)
+e3.grid(row=3,column=2)
+l4=Label(win,text="SkinThickness",font=("Comic Sans MS",10))
+l4.grid(row=4,column=1)
+e4=Entry(win)
+e4.grid(row=4,column=2)
+l5=Label(win,text="Insulin",font=("Comic Sans MS",10))
+l5.grid(row=5,column=1)
+e5=Entry(win)
+e5.grid(row=5,column=2)
+l6=Label(win,text="BMI",font=("Comic Sans MS",10))
+l6.grid(row=6,column=1)
+e6=Entry(win)
+e6.grid(row=6,column=2)
+l7=Label(win,text="DiabetesPedigreeFunction",font=("Comic Sans MS",10))
+l7.grid(row=7,column=1)
+e7=Entry(win)
+e7.grid(row=7,column=2)
+l8=Label(win,text="Age",font=("Comic Sans MS",10))
+l8.grid(row=8,column=1)
+e8=Entry(win)
+e8.grid(row=8,column=2)
+b=Button(win,text="Click here",font=("Comic Sans MS",10),command=func)
+b.grid(row=9,column=3)
+win.mainloop()
